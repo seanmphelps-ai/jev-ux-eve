@@ -1,8 +1,3 @@
-import { defineTool } from "eve/tools";
-import { bash } from "eve/tools/bash";
-import { commandApproval } from "../lib/command-approval";
+import { disableTool } from "eve/tools";
 
-export default defineTool({
-  ...bash,
-  approval: commandApproval(),
-});
+export default disableTool();
