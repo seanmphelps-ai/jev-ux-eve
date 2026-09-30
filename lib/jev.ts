@@ -1,27 +1,26 @@
 import { DEFAULT_QUESTIONS, localEvaluate, toRecord, type DecisionRecord, type Question } from "./policy";
 
-const OPENROUTER_DECISIONS_URL = "https://openrouter.ai/api/alpha/decisions";
-const DEFAULT_JEV_MODEL = "typesafe/jev-1.13";
+const VERCEL_JEV_URL = "https://ai-gateway.vercel.sh/v1/evaluate";
 
 export async function evaluateState(
   state: string,
   questions: Record<string, Question> = DEFAULT_QUESTIONS,
 ): Promise<DecisionRecord> {
   const started = Date.now();
-  const key = process.env.OPENROUTER_API_KEY;
+  const key = process.env.AI_GATEWAY_API_KEY;
 
   if (key) {
     try {
-      const res = await fetch(OPENROUTER_DECISIONS_URL, {
+      const res = await fetch(VERCEL_JEV_URL, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${key}`,
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          model: process.env.JEV_MODEL ?? DEFAULT_JEV_MODEL,
+          model: "typesafe-ai/jev",
           state,
-          questions: toOpenRouterQuestions(questions),
+          questions: toGatewayQuestions(questions),
         }),
       });
 
@@ -56,23 +55,31 @@ export async function evaluateState(
   );
 }
 
-function toOpenRouterQuestions(questions: Record<string, Question>) {
+function toGatewayQuestions(questions: Record<string, Question>) {
   const out: Record<string, unknown> = {};
 
   for (const [name, question] of Object.entries(questions)) {
+    if (question.type === "noul" || question.type === "boolean") {
+      out[name] = {
+        type: "boolean",
+        instructions: question.instructions,
+      };
+      continue;
+    }
+
     if (question.type === "score") {
       out[name] = {
         type: "score",
         instructions: question.instructions,
-        criteria: question.scale,
+        scale: question.scale,
       };
       continue;
     }
 
     out[name] = {
-      type: question.type === "boolean" ? "noul" : question.type,
+      type: "choice",
       instructions: question.instructions,
-      ...(question.criteria ? { criteria: question.criteria } : {}),
+      criteria: question.criteria,
     };
   }
 
