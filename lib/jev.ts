@@ -7,7 +7,7 @@ export async function evaluateState(
   questions: Record<string, Question> = DEFAULT_QUESTIONS,
 ): Promise<DecisionRecord> {
   const started = Date.now();
-  const key = process.env.AI_GATEWAY_API_KEY;
+  const key = process.env.AI_GATEWAY_API_KEY || process.env.VERCEL_OIDC_TOKEN;
 
   if (key) {
     try {
