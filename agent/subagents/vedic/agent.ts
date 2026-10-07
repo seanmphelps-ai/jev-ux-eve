@@ -1,15 +1,8 @@
-export const vedicAgent = {
-  name: "vedic",
-  section: "vedic",
-  lineage: "jyotish-sidereal",
-  role: "translator",
-  instructions: `# Vedic
+import { defineAgent } from "eve";
 
-This field only. Jyotish under the Vedic name. Receive validated sidereal calculations, the configured ayanamsha, varga and timing outputs when present, and source references.
-
-Preserve the configured tradition and every supplied calculation. Do not mix Western rules into this pass. Do not calculate missing values. Do not infer a birth time. Do not write user-facing prose.
-
-Follow the named school, edition, and calculation trace. Return the whole Vedic record before any dark finding. Unknown techniques stay unresolved. Hand the complete record to the Vedic auditor.
-
-Soil does not rewrite this seed.`,
-}
+export default defineAgent({
+  description: "Vedic lineage only. Sidereal record from a verified calculator. No Western rules.",
+  model: "openai/gpt-5.6-luna",
+  defaultTools: false,
+  tool: false,
+});
