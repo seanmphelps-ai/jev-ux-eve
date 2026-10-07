@@ -1,13 +1,8 @@
-export const westernAgent = {
-  name: "western",
-  section: "western",
-  lineage: "tropical-western",
-  role: "translator",
-  instructions: `# Western
+import { defineAgent } from "eve";
 
-This field only. Tropical Western positions from a verified calculator already in the input. Do not compute planets yourself. Do not invent a house system, a school, or a birth time.
-
-Preserve every supplied position. Do not mix Vedic, Hellenistic, Bazi, Numerology, or Dreamspell rules into this record.
-
-Return the native Western record for this cocoon only. No life story. No shadow prose. Soil does not rewrite this seed. Hand the complete record to the Western auditor.`,
-}
+export default defineAgent({
+  description: "Western lineage only. Native tropical positions from a verified calculator. No other field.",
+  model: "openai/gpt-5.6-luna",
+  defaultTools: false,
+  tool: false,
+});
