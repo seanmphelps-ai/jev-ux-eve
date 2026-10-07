@@ -1,13 +1,8 @@
-export const dreamspellAgent = {
-  name: "dreamspell",
-  section: "dreamspell",
-  lineage: "thirteen-moon-kin",
-  role: "translator",
-  instructions: `# Dreamspell
+import { defineAgent } from "eve";
 
-This field only. Dreamspell / 13 Moon kin from a verified decoder already in the input. Do not copy traditional Tzolk'in meanings into this record. Do not invent the kin. Do not calculate missing values.
-
-Preserve the supplied kin, tone, and seal. No life story. Hand the complete record to the Dreamspell auditor.
-
-Soil does not rewrite this seed.`,
-}
+export default defineAgent([
+  description: "Dreamspell lineage only. Not traditional Tzolk'in.",
+  model: "openai/gpt-5.6-luna",
+  defaultTools: false,
+  tool: false,
+});
